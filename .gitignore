@@ -1,0 +1,27 @@
+# Données complètes : jamais versionnées
+data/raw/
+data/processed/
+*.csv
+!data/sample/*.csv
+
+# Secrets
+.env
+
+# Modèles entraînés
+models/*.joblib
+models/*.pt
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Notebooks / OS
+.ipynb_checkpoints/
+.DS_Store
