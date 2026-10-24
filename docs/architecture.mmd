@@ -1,0 +1,38 @@
+flowchart LR
+    subgraph SRC["Sources"]
+        CSV["9 CSV Olist<br/>(data/raw, non versionné)"]
+    end
+
+    subgraph ETL["Pipeline ETL — Prefect"]
+        E["Extract<br/>lecture des CSV"]
+        T["Transform<br/>nettoyage + contrôles qualité"]
+        L["Load<br/>chargement idempotent"]
+        E --> T --> L
+    end
+
+    subgraph DB["PostgreSQL (Docker)"]
+        RAW[("schéma raw<br/>données brutes")]
+        CLEAN[("schéma clean<br/>tables nettoyées")]
+        MART[("schéma mart<br/>vues RFM, features, KPI")]
+        RAW --> CLEAN --> MART
+    end
+
+    subgraph USE["Exploitation"]
+        NB["Notebooks<br/>EDA, tests stats, RFM"]
+        DASH["Dashboard Streamlit<br/>5 KPI direction"]
+        TRAIN["Entraînement<br/>retard + sentiment"]
+        MOD[["models/*.joblib"]]
+        API["API FastAPI (Docker)<br/>/predict/delay<br/>/predict/sentiment"]
+        TRAIN --> MOD --> API
+    end
+
+    QR["Rapport qualité<br/>avant / après"]
+    CI["GitHub Actions<br/>ruff + pytest + build Docker"]
+
+    CSV --> E
+    L --> RAW
+    T -.-> QR
+    MART --> NB
+    MART --> DASH
+    MART --> TRAIN
+    CI -.-> API
