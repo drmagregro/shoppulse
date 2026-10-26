@@ -25,12 +25,24 @@ def charger_table(table, fichier):
     print(f"raw.{table} : {nb} lignes")
 
 
-# Le pipeline : on crée le schéma, puis on charge les 9 tables
+# Tâche 3 : créer les tables nettoyées (schéma clean)
+@task(retries=2)
+def creer_clean():
+    conn = get_connection()
+    cur = conn.cursor()
+    with open("sql/02_clean_schema.sql") as f:
+        cur.execute(f.read())
+    conn.commit()
+    conn.close()
+
+
+# Le pipeline : schéma raw, chargement des 9 tables, puis schéma clean
 @flow(log_prints=True)
 def pipeline_etl():
     creer_schema()
     for table in TABLES:
         charger_table(table, TABLES[table])
+    creer_clean()
 
 
 if __name__ == "__main__":
