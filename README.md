@@ -27,7 +27,7 @@ Prérequis : Python 3.11, Docker, un compte Kaggle.
 git clone <url-du-depot> && cd shoppulse
 cp .env.example .env
 python -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev]"
+pip install -e ".[dev,pipeline]"
 ```
 
 Télécharger les données : voir `data/README.md`.
@@ -35,8 +35,11 @@ Télécharger les données : voir `data/README.md`.
 ## Lancement
 
 ```bash
-# Base de données
+# Base de données (PostgreSQL exposé sur le port 5433)
 docker compose -f infra/docker-compose.yml up -d db
+
+# Pipeline ETL : crée le schéma raw et charge les 9 CSV (rejouable sans doublons)
+python pipelines/etl_flow.py
 
 # API (conteneurisée)
 docker compose -f infra/docker-compose.yml up --build api

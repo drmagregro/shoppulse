@@ -16,8 +16,8 @@ TABLES = {
 }
 
 
+# Vide la table puis la remplit avec le CSV, renvoie le nombre de lignes
 def load_table(cur, table, filename):
-    """Vide la table puis la remplit avec le CSV. Renvoie le nombre de lignes."""
     cur.execute(f"TRUNCATE raw.{table}")
     with open(f"data/raw/{filename}", encoding="utf-8") as f:
         cur.copy_expert(f"COPY raw.{table} FROM STDIN WITH (FORMAT csv, HEADER)", f)
@@ -25,18 +25,29 @@ def load_table(cur, table, filename):
     return cur.fetchone()[0]
 
 
-conn = psycopg2.connect(
-    host=settings.postgres_host,
-    port=settings.postgres_port,
-    user=settings.postgres_user,
-    password=settings.postgres_password,
-    dbname=settings.postgres_db,
-)
-cur = conn.cursor()
+# Connexion à la base (les infos viennent du fichier .env)
+def get_connection():
+    conn = psycopg2.connect(
+        host=settings.postgres_host,
+        port=settings.postgres_port,
+        user=settings.postgres_user,
+        password=settings.postgres_password,
+        dbname=settings.postgres_db,
+    )
+    return conn
 
-for table, filename in TABLES.items():
-    nb = load_table(cur, table, filename)
-    print(f"raw.{table} : {nb} lignes")
 
-conn.commit()
-conn.close()
+# Charge les 9 tables
+def run():
+    conn = get_connection()
+    cur = conn.cursor()
+    for table in TABLES:
+        nb = load_table(cur, table, TABLES[table])
+        print(f"raw.{table} : {nb} lignes")
+    conn.commit()
+    conn.close()
+
+
+# Ce bloc ne s'exécute que si on lance ce fichier directement
+if __name__ == "__main__":
+    run()
