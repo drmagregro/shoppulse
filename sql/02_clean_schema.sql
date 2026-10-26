@@ -41,8 +41,8 @@ CREATE TABLE clean.products AS
 SELECT
     product_id,
     product_category_name,
-    product_name_lenght::INTEGER         AS product_name_lenght,
-    product_description_lenght::INTEGER  AS product_description_lenght,
+    product_name_length::INTEGER         AS product_name_length,
+    product_description_length::INTEGER  AS product_description_length,
     product_photos_qty::INTEGER          AS product_photos_qty,
     product_weight_g::INTEGER            AS product_weight_g,
     product_length_cm::INTEGER           AS product_length_cm,
