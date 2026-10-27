@@ -1,6 +1,7 @@
 from prefect import flow, task
 
 from shoppulse.etl.load_raw import TABLES, get_connection, load_table
+from shoppulse.etl.quality import generer_rapport
 
 
 # Tâche 1 : créer le schéma raw et ses tables
@@ -36,13 +37,20 @@ def creer_clean():
     conn.close()
 
 
-# Le pipeline : schéma raw, chargement des 9 tables, puis schéma clean
+# Tâche 4 : contrôles qualité avant/après, écrits dans docs/rapport_qualite.md
+@task
+def rapport_qualite():
+    generer_rapport()
+
+
+# Le pipeline : schéma raw, chargement des 9 tables, schéma clean, rapport qualité
 @flow(log_prints=True)
 def pipeline_etl():
     creer_schema()
     for table in TABLES:
         charger_table(table, TABLES[table])
     creer_clean()
+    rapport_qualite()
 
 
 if __name__ == "__main__":
