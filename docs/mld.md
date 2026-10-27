@@ -18,7 +18,7 @@ Clé primaire en **gras** · clé étrangère précédée de **#**
 
 **ORDER_REVIEWS** (**review_id**, **#order_id**, review_score, review_comment_title, review_comment_message, review_creation_date, review_answer_timestamp)
 
-**PRODUCTS** (**product_id**, #product_category_name, product_name_lenght, product_description_lenght, product_photos_qty, product_weight_g, product_length_cm, product_height_cm, product_width_cm)
+**PRODUCTS** (**product_id**, #product_category_name, product_name_length, product_description_length, product_photos_qty, product_weight_g, product_length_cm, product_height_cm, product_width_cm)
 
 **SELLERS** (**seller_id**, seller_zip_code_prefix, seller_city, seller_state)
 
@@ -32,4 +32,4 @@ Clé primaire en **gras** · clé étrangère précédée de **#**
 - **customer_id n'est pas le client** : Olist crée un `customer_id` différent à chaque commande. Le vrai client est identifié par `customer_unique_id`, utilisé pour la segmentation RFM.
 - **Clés composées** : une commande peut contenir plusieurs articles et plusieurs paiements, d'où les clés (`order_id`, `order_item_id`) et (`order_id`, `payment_sequential`). Un même `review_id` peut apparaître sur plusieurs commandes, d'où la clé (`review_id`, `order_id`).
 - **GEOLOCATION** : le fichier contient plusieurs lignes par code postal. Il sera réduit à une ligne par code postal lors du nettoyage. Le lien avec CUSTOMERS et SELLERS se fait par le code postal, sans clé étrangère, car certains codes sont absents.
-- **Noms de colonnes** : les fautes du fichier d'origine (`lenght`) sont conservées pour rester fidèle aux données sources.
+- **Noms de colonnes** : le CSV d'origine contient une faute (`product_name_lenght`, `product_description_lenght`). Elle est corrigée en `length` dès le schéma raw ; le chargement (COPY) se fait par position de colonne, il n'est donc pas affecté.
