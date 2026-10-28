@@ -9,7 +9,7 @@ from shoppulse.etl.quality import generer_rapport
 def creer_schema():
     conn = get_connection()
     cur = conn.cursor()
-    with open("sql/01_raw_schema.sql") as f:
+    with open("sql/01_raw_schema.sql", encoding="utf-8") as f:
         cur.execute(f.read())
     conn.commit()
     conn.close()
@@ -31,7 +31,7 @@ def charger_table(table, fichier):
 def creer_clean():
     conn = get_connection()
     cur = conn.cursor()
-    with open("sql/02_clean_schema.sql") as f:
+    with open("sql/02_clean_schema.sql", encoding="utf-8") as f:
         cur.execute(f.read())
     conn.commit()
     conn.close()
@@ -42,7 +42,7 @@ def creer_clean():
 def creer_mart():
     conn = get_connection()
     cur = conn.cursor()
-    with open("sql/03_mart.sql") as f:
+    with open("sql/03_mart.sql", encoding="utf-8") as f:
         cur.execute(f.read())
     conn.commit()
     conn.close()
