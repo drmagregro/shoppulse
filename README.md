@@ -26,7 +26,8 @@ Prérequis : Python 3.11, Docker, un compte Kaggle.
 ```bash
 git clone <url-du-depot> && cd shoppulse
 cp .env.example .env
-python -m venv .venv && source .venv/bin/activate
+python -m venv .venv
+source .venv/bin/activate      # Windows : .venv\Scripts\activate
 pip install -e ".[dev,pipeline]"
 ```
 
@@ -40,6 +41,9 @@ docker compose -f infra/docker-compose.yml up -d db
 
 # Pipeline ETL : crée le schéma raw et charge les 9 CSV (rejouable sans doublons)
 python pipelines/etl_flow.py
+
+# Dashboard direction (http://localhost:8501)
+python -m streamlit run dashboards/app.py
 
 # API (conteneurisée)
 docker compose -f infra/docker-compose.yml up --build api
@@ -55,7 +59,11 @@ pytest
 
 ## Démo
 
-_Captures du dashboard à ajouter dans `dashboards/`._
+Dashboard direction (`python -m streamlit run dashboards/app.py`) : 5 KPI (chiffre d'affaires, commandes, panier moyen, taux de retard, note moyenne), filtrables par année.
+
+![Chiffre d'affaires par mois](dashboards/capture_dashboard_1.png)
+![Taux de retard par état](dashboards/capture_dashboard_2.png)
+![Note moyenne selon le retard](dashboards/capture_dashboard_3.png)
 
 ## Usage de l'IA
 
