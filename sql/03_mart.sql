@@ -130,3 +130,23 @@ FROM commandes cm
 JOIN colis co ON co.order_id = cm.order_id;
 
 ALTER TABLE mart.features_retard ADD PRIMARY KEY (order_id);
+
+
+-- ---------- AVIS POUR LE MODÈLE DE SENTIMENT ----------
+-- Un avis avec un commentaire écrit (titre et/ou message), en portugais.
+-- Label dérivé de la note : 1-2 = négatif (0), 4-5 = positif (1).
+-- Les notes de 3 sont exclues : elles sont ambiguës (ni vraiment positives, ni négatives).
+DROP TABLE IF EXISTS mart.avis_sentiment;
+CREATE TABLE mart.avis_sentiment AS
+SELECT
+    review_id,
+    order_id,
+    TRIM(CONCAT_WS(' ', review_comment_title, review_comment_message)) AS texte,
+    review_score                                                      AS note,
+    CASE WHEN review_score >= 4 THEN 1 ELSE 0 END                     AS positif
+FROM clean.order_reviews
+WHERE review_score <> 3
+  AND (review_comment_title IS NOT NULL OR review_comment_message IS NOT NULL)
+  AND TRIM(CONCAT_WS(' ', review_comment_title, review_comment_message)) <> '';
+
+ALTER TABLE mart.avis_sentiment ADD PRIMARY KEY (review_id, order_id);
