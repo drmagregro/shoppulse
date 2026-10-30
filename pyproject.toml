@@ -15,7 +15,7 @@ dependencies = [
     "pydantic-settings>=2.2",
     "fastapi>=0.110",
     "uvicorn>=0.29",
-    "scikit-learn>=1.4",
+    "scikit-learn==1.9.1",  # même version que pour l'entraînement des modèles
     "joblib>=1.3",
 ]
 
