@@ -39,8 +39,12 @@ Télécharger les données : voir `data/README.md`.
 # Base de données (PostgreSQL exposé sur le port 5433)
 docker compose -f infra/docker-compose.yml up -d db
 
-# Pipeline ETL : crée le schéma raw et charge les 9 CSV (rejouable sans doublons)
+# Pipeline ETL : raw, clean, mart et rapport qualité (rejouable sans doublons)
 python pipelines/etl_flow.py
+
+# Entraînement des deux modèles (enregistrés dans models/, non versionnés)
+# À lancer AVANT de construire l'image de l'API
+python pipelines/train_models.py
 
 # Dashboard direction (http://localhost:8501)
 python -m streamlit run dashboards/app.py
@@ -49,6 +53,9 @@ python -m streamlit run dashboards/app.py
 docker compose -f infra/docker-compose.yml up --build api
 # Documentation OpenAPI : http://localhost:8000/docs
 ```
+
+Les notebooks `notebooks/01` à `05` détaillent l'analyse (EDA, segmentation, comparaison
+des modèles, audit d'équité). Ils lisent la base remplie par le pipeline.
 
 ## Tests et qualité
 
@@ -76,8 +83,7 @@ pour que je puisse savoir ce que je fais et aussi pour pour tenir les délais : 
 (EDA, segmentation, modèles), l'API et les tests. Il m'a aussi aidé à
 rédiger un premier jet de la note éthique et de la rétro.
 
-De mon côté, j'ai écrit moi-même, les requêtes SQL, le dashboard, le schéma raw et le premier script de chargement, et
-j'ai monté toute la partie environnement (Docker, Postgres, le .env, VS Code), ce qui m'a
+De mon côté, j'ai écrit moi-même, les requêtes SQL, le dashboard, le schéma raw et le premier script de chargement, et j'ai monté toute la partie environnement (Docker, Postgres, le .env, VS Code), ce qui m'a
 donné pas mal de fil à retordre (conflit de port, mot de passe, kernel Jupyter...).
 J'ai lancé chaque étape sur les vraies données, vérifié les résultats avant de les
 commiter, et géré tout le Git : branches, commits, PR, backlog. J'ai aussi fait les
