@@ -65,6 +65,24 @@ Dashboard direction (`python -m streamlit run dashboards/app.py`) : 5 KPI (chiff
 ![Taux de retard par état](dashboards/capture_dashboard_2.png)
 ![Note moyenne selon le retard](dashboards/capture_dashboard_3.png)
 
+
 ## Usage de l'IA
 
-_À compléter honnêtement : quels outils d'IA ont été utilisés, pour quelles parties, et ce qui a été vérifié ou réécrit à la main._
+Je me suis servi de Claude (Anthropic) comme assistant sur tout le projet. Au début,
+surtout pour m'organiser : découper le travail en jours, planifier les commits, poser
+l'architecture. Ensuite, quand j'ai pris du retard en début de semaine, je lui ai fait
+générer une bonne partie du code dans un but ludique et d'apprentissage en me mettant des trous dans le code
+pour que je puisse savoir ce que je fais et aussi pour pour tenir les délais : les notebooks
+(EDA, segmentation, modèles), l'API et les tests. Il m'a aussi aidé à
+rédiger un premier jet de la note éthique et de la rétro.
+
+De mon côté, j'ai écrit moi-même, les requêtes SQL, le dashboard, le schéma raw et le premier script de chargement, et
+j'ai monté toute la partie environnement (Docker, Postgres, le .env, VS Code), ce qui m'a
+donné pas mal de fil à retordre (conflit de port, mot de passe, kernel Jupyter...).
+J'ai lancé chaque étape sur les vraies données, vérifié les résultats avant de les
+commiter, et géré tout le Git : branches, commits, PR, backlog. J'ai aussi fait les
+choix finaux, comme garder la régression logistique pour le sentiment, ou demander un
+code plus simple pour pouvoir le comprendre.
+
+Tout ce qui est dans le dépôt a été exécuté, testé (pytest, ruff, CI) et relu avant
+d'être mergé.
